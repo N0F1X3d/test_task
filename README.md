@@ -28,7 +28,7 @@ Pogoda — это простое веб-приложение на Django, кот
 1. Клонируйте репозиторий:
 
    ```bash
-   git clone https://github.com/yourusername/pogoda.git
+   git clone https://github.com/N0F1X3d/test_task
    cd pogoda
 
 2. Установите зависимости:
