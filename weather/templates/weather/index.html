@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Погода</title>
+</head>
+<body>
+    <h1>Погода</h1>
+
+    {% if last_city and not city %}
+        <p>Последний просмотренный город: <strong>{{ last_city }}</strong></p>
+        <form method="get" action="">
+            <input type="hidden" name="city" value="{{ last_city }}">
+            <button type="submit">Показать погоду</button>
+        </form>
+        <hr>
+    {% endif %}
+
+    <form method="get" action="">
+        <input type="text" name="city" id="city-input" placeholder="Введите город" autocomplete="off" required>
+        <ul id="suggestions" style="list-style: none; padding: 0;"></ul>
+        <button type="submit">Узнать погоду</button>
+    </form>
+
+    {% if hourly_forecast %}
+        <h2>Погода в городе "{{ city }}"</h2>
+        <h3>Почасовой прогноз на ближайшие 8 часов</h3>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Время</th>
+                    <th>Температура, °C</th>
+                    <th>Погода</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for hour in hourly_forecast %}
+                    <tr>
+                        <td>{{ hour.time|slice:":16" }}</td>
+                        <td>{{ hour.temperature }}</td>
+                        <td>{{ hour.description }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+</body>
+</html>
+
+<script>
+const input = document.getElementById("city-input");
+const suggestions = document.getElementById("suggestions");
+
+let debounceTimer;
+input.addEventListener("input", function () {
+    clearTimeout(debounceTimer);
+    const query = this.value;
+    if (query.length < 2) {
+        suggestions.innerHTML = '';
+        return;
+    }
+
+    debounceTimer = setTimeout(() => {
+        fetch(`/autocomplete/?term=${query}`)
+            .then(res => res.json())
+            .then(data => {
+                suggestions.innerHTML = '';
+                data.forEach(city => {
+                    const li = document.createElement("li");
+                    li.textContent = city;
+                    li.style.cursor = "pointer";
+                    li.onclick = () => {
+                        input.value = city;
+                        suggestions.innerHTML = '';
+                    };
+                    suggestions.appendChild(li);
+                });
+            });
+    }, 300); // 300ms debounce
+});
+</script>

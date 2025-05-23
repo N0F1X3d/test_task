@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
+venv/
+*.sqlite3
+
+# Django
+*.log
+db.sqlite3
+
+# VS Code
+.vscode/
+
+# Docker
+*.env  # если есть файл с секретами
+docker-compose.override.yml
+
+# Mac/Linux
+.DS_Store
+
+# Windows
+Thumbs.db
