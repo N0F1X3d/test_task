@@ -80,7 +80,6 @@ def index(request):
 
     return render(request, 'weather/index.html', {
     'city': city or last_city,
-    'weather': None,  # Уже не используем current weather
     'hourly_forecast': hourly_forecast,
     'error': error,
     'last_city': last_city,
